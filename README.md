@@ -7,6 +7,12 @@
 [![Deployed on Render](https://img.shields.io/badge/Render-Static_Site-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://render.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
+<p align="left">
+  <a href="https://render.com/deploy?repo=https://github.com/ApurvPandey0199/LuminaDashboard">
+    <img src="https://render.com/images/deploy-to-render-button.svg" alt="Deploy to Render" />
+  </a>
+</p>
+
 A high-performance, modern full-stack blog application built with **pure HTML5, CSS3 (Custom Properties), and Vanilla JavaScript (ES6+)**. Zero frameworks, zero external build tools, and zero third-party UI libraries (No React, No Bootstrap, No jQuery).
 
 Persistent data is managed completely client-side in `localStorage` with hardware-accelerated **SHA-256 cryptographic hashing** via the browser's native **Web Crypto API**.
