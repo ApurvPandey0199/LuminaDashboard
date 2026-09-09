@@ -1,5 +1,5 @@
 {
-  "name": "lumina-blog-app",
+  "name": "lumina-dashboard",
   "version": "1.0.0",
   "description": "Full-Stack Blog Application built purely with Vanilla HTML5, CSS3, and JavaScript, featuring Web Crypto API SHA-256 authentication and LocalStorage persistence.",
   "main": "index.html",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ApurvPandey0199/lumina-blog-app.git"
+    "url": "git+https://github.com/ApurvPandey0199/LuminaDashboard.git"
   },
   "keywords": [
     "vanilla-javascript",

@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: lumina-blog
+    name: lumina-dashboard
     env: static
     buildCommand: ""
     staticPublishPath: .

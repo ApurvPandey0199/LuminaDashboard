@@ -1,6 +1,6 @@
 @echo off
 set "PATH=%LOCALAPPDATA%\MinGit\cmd;%PATH%"
-echo Pushing code to https://github.com/ApurvPandey0199/lumina-blog-app...
+echo Pushing code to https://github.com/ApurvPandey0199/LuminaDashboard...
 git push -u origin main
 echo.
 echo ============================================================

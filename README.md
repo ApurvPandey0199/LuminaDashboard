@@ -65,19 +65,19 @@ Persistent data is managed completely client-side in `localStorage` with hardwar
 This project is configured for **100% automated deployment** on [Render](https://render.com) as a **Static Site**.
 
 ### Method 1: Automatic Blueprint Deployment (Recommended)
-1. Push this repository to your GitHub account: `https://github.com/ApurvPandey0199/lumina-blog-app`
+1. Push this repository to your GitHub account: `https://github.com/ApurvPandey0199/LuminaDashboard`
 2. Log in to [Render Dashboard](https://dashboard.render.com).
 3. Click **New +** > **Blueprint**.
-4. Select your `lumina-blog-app` repository.
+4. Select your `LuminaDashboard` repository.
 5. Render will detect `render.yaml` automatically and configure the static site.
 6. Click **Apply** — your site will be live with free SSL in less than 30 seconds!
 
 ### Method 2: Manual Static Site Setup
 1. Log in to [Render Dashboard](https://dashboard.render.com).
 2. Click **New +** > **Static Site**.
-3. Connect your GitHub repository: `ApurvPandey0199/lumina-blog-app`.
+3. Connect your GitHub repository: `ApurvPandey0199/LuminaDashboard`.
 4. Enter the configuration:
-   - **Name**: `lumina-blog`
+   - **Name**: `lumina-dashboard`
    - **Branch**: `main`
    - **Build Command**: *(leave blank or `echo ready`)*
    - **Publish Directory**: `./` (or `.`)
