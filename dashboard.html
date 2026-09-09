@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Author Dashboard | Lumina Blog</title>
+  <meta name="description" content="Manage, author, edit and publish your blog articles. Protected author portal.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Protected Dashboard Header -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="index.html" class="logo" id="site-logo">
+        <div class="logo-icon">L</div>
+        <div class="logo-text">Lumina<span>Dashboard</span></div>
+      </a>
+      <div class="nav-actions" id="nav-actions">
+        <!-- Filled dynamically by auth.js -->
+      </div>
+    </div>
+  </header>
+
+  <!-- Dashboard Main Container -->
+  <main class="container">
+    <!-- Welcome Bar -->
+    <div class="dashboard-header">
+      <div class="dashboard-title-group">
+        <h1>Welcome, <span id="dash-welcome-name">Author</span> 👋</h1>
+        <p>Manage your publications, author new articles, and monitor drafts.</p>
+      </div>
+      <div>
+        <span class="badge badge-pill" id="dash-user-email">author@example.com</span>
+      </div>
+    </div>
+
+    <!-- Quick Metrics Cards -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-purple">📚</div>
+        <div>
+          <div class="stat-number" id="stat-total-posts">0</div>
+          <div class="stat-label">Your Total Posts</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-green">🚀</div>
+        <div>
+          <div class="stat-number" id="stat-active-posts">0</div>
+          <div class="stat-label">Active &amp; Published</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-amber">📝</div>
+        <div>
+          <div class="stat-number" id="stat-inactive-posts">0</div>
+          <div class="stat-label">Inactive Drafts</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Two-Column Work Area: Post Editor & Posts List -->
+    <div class="dashboard-grid">
+
+      <!-- Column 1: Create / Edit Post Panel -->
+      <section class="card-panel" id="post-form-card">
+        <div class="card-panel-header">
+          <h2 class="card-panel-title" id="form-card-title">Create New Post</h2>
+          <button type="button" class="btn btn-outline btn-sm" id="btn-cancel-edit" style="display: none;">Cancel Edit</button>
+        </div>
+
+        <form id="post-form">
+          <!-- Title Input -->
+          <div class="form-group">
+            <label class="form-label" for="post-title">Article Title <span class="req">*</span></label>
+            <input 
+              type="text" 
+              id="post-title" 
+              class="form-control" 
+              placeholder="e.g. Modern CSS Techniques You Should Know in 2026" 
+              required
+            >
+          </div>
+
+          <!-- Description / Content Input -->
+          <div class="form-group">
+            <label class="form-label" for="post-desc">Article Content <span class="req">*</span></label>
+            <textarea 
+              id="post-desc" 
+              class="form-control" 
+              placeholder="Write your article thoughts, tutorials, or updates here..." 
+              required
+            ></textarea>
+          </div>
+
+          <!-- Optional Cover Image Upload (Base64) -->
+          <div class="form-group">
+            <label class="form-label">Cover Image <span style="color: var(--text-dim); font-weight: normal;">(Optional)</span></label>
+            
+            <div class="image-upload-wrapper" id="image-upload-dropzone">
+              <input type="file" id="post-cover-input" class="file-input-hidden" accept="image/png, image/jpeg, image/webp, image/svg+xml">
+              <div class="upload-prompt" id="upload-prompt">
+                <span class="upload-icon">📷</span>
+                <span style="font-weight: 600; color: var(--text-main);">Click or Drag to Upload Cover Image</span>
+                <span style="font-size: 0.78rem; color: var(--text-dim);">PNG, JPG, WebP (Converted to Base64 locally)</span>
+              </div>
+            </div>
+
+            <!-- Preview Box -->
+            <div class="upload-preview-container" id="upload-preview-container">
+              <img id="upload-preview-img" class="upload-preview-img" src="" alt="Selected image preview">
+              <button type="button" class="btn-remove-image" id="btn-remove-image" title="Remove image">&times;</button>
+            </div>
+          </div>
+
+          <!-- Status Toggle (Active / Inactive) -->
+          <div class="toggle-group">
+            <div class="toggle-label-wrap">
+              <span class="toggle-main-label">Post Status</span>
+              <span class="toggle-sub-label">Active posts appear immediately on the public feed</span>
+            </div>
+            <label class="switch" title="Toggle Active / Inactive">
+              <input type="checkbox" id="post-status-toggle" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <!-- Action Button -->
+          <button type="submit" class="btn btn-primary btn-lg" id="btn-submit-post" style="width: 100%;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            Publish Post
+          </button>
+        </form>
+      </section>
+
+      <!-- Column 2: Manage Author's Own Posts -->
+      <section class="card-panel">
+        <div class="card-panel-header">
+          <h2 class="card-panel-title">My Articles</h2>
+          <a href="index.html" class="btn btn-outline btn-sm">View Public Feed</a>
+        </div>
+
+        <div class="dash-post-list" id="dash-post-list">
+          <!-- Dynamically filled with logged-in user's posts -->
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-backdrop" id="confirm-delete-modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-dialog confirm-dialog">
+      <div class="confirm-icon">⚠️</div>
+      <h3 class="confirm-title">Delete Article?</h3>
+      <p class="confirm-desc">Are you sure you want to delete this article? This action cannot be undone and will permanently remove it from your storage.</p>
+      <div class="confirm-actions">
+        <button class="btn btn-secondary" id="btn-cancel-delete">Cancel</button>
+        <button class="btn btn-danger" id="btn-confirm-delete">Confirm Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <p style="font-size: 0.85rem;">Author Control Center &bull; Protected Session</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="auth.js"></script>
+  <script src="app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      initDashboard();
+    });
+  </script>
+</body>
+</html>

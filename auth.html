@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Authentication | Lumina Blog</title>
+  <meta name="description" content="Sign in or register for an author account on Lumina Blog with SHA-256 Web Crypto hashing.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Minimal Header -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="index.html" class="logo" id="site-logo">
+        <div class="logo-icon">L</div>
+        <div class="logo-text">Lumina<span>Blog</span></div>
+      </a>
+      <div class="nav-actions">
+        <a href="index.html" class="btn btn-outline btn-sm">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+          Back to Feed
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Auth Card Container -->
+  <div class="auth-wrapper">
+    <div class="auth-card">
+
+      <!-- Tab Switcher -->
+      <div class="auth-tabs" role="tablist">
+        <button type="button" class="auth-tab-btn active" id="tab-login" onclick="switchAuthTab('login')">Sign In</button>
+        <button type="button" class="auth-tab-btn" id="tab-signup" onclick="switchAuthTab('signup')">Create Account</button>
+      </div>
+
+      <!-- ================= LOGIN FORM ================= -->
+      <form id="form-login" onsubmit="handleLoginSubmit(event)">
+        <div class="form-group">
+          <label class="form-label" for="login-email">Email Address <span class="req">*</span></label>
+          <input 
+            type="email" 
+            id="login-email" 
+            class="form-control" 
+            placeholder="e.g. author@lumina.dev" 
+            required 
+            autocomplete="email"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="login-password">Password <span class="req">*</span></label>
+          <div class="password-input-wrap">
+            <input 
+              type="password" 
+              id="login-password" 
+              class="form-control" 
+              placeholder="Enter your password" 
+              required 
+              autocomplete="current-password"
+            >
+            <button 
+              type="button" 
+              class="password-toggle-btn" 
+              onclick="togglePasswordVisibility('login-password', this)"
+              title="Toggle password view"
+            >
+              👁️
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg" id="btn-login-submit" style="width: 100%; margin-top: 0.5rem;">
+          Sign In to Dashboard
+        </button>
+
+        <!-- Demo Account Helper Box -->
+        <div class="demo-credentials-box">
+          <p>⚡ Quick Test Credentials:</p>
+          <div>Email: <code>demo@example.com</code></div>
+          <div style="margin-top: 0.2rem;">Pass: <code>Demo@123</code></div>
+          <button 
+            type="button" 
+            class="btn btn-secondary btn-sm" 
+            onclick="fillDemoCredentials()" 
+            style="width: 100%; margin-top: 0.6rem;"
+          >
+            Auto-Fill Demo Account
+          </button>
+        </div>
+      </form>
+
+      <!-- ================= SIGNUP FORM ================= -->
+      <form id="form-signup" onsubmit="handleSignupSubmit(event)" style="display: none;">
+        <div class="form-group">
+          <label class="form-label" for="signup-name">Full Name <span class="req">*</span></label>
+          <input 
+            type="text" 
+            id="signup-name" 
+            class="form-control" 
+            placeholder="e.g. Apurv Pandey" 
+            required 
+            autocomplete="name"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="signup-email">Email Address <span class="req">*</span></label>
+          <input 
+            type="email" 
+            id="signup-email" 
+            class="form-control" 
+            placeholder="e.g. apurv@example.com" 
+            required 
+            autocomplete="email"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="signup-password">Create Password <span class="req">*</span></label>
+          <div class="password-input-wrap">
+            <input 
+              type="password" 
+              id="signup-password" 
+              class="form-control" 
+              placeholder="Minimum 6 characters" 
+              required 
+              minlength="6"
+              autocomplete="new-password"
+            >
+            <button 
+              type="button" 
+              class="password-toggle-btn" 
+              onclick="togglePasswordVisibility('signup-password', this)"
+              title="Toggle password view"
+            >
+              👁️
+            </button>
+          </div>
+          <small style="color: var(--text-dim); font-size: 0.76rem; display: block; margin-top: 0.35rem;">
+            🔒 Passwords are encrypted with SHA-256 via Web Crypto API before saving.
+          </small>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg" id="btn-signup-submit" style="width: 100%; margin-top: 0.5rem;">
+          Register Account
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <p style="font-size: 0.85rem;">Client-side SHA-256 Web Crypto Authentication Demo</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="auth.js"></script>
+  <script>
+    // Check if user is already logged in
+    document.addEventListener('DOMContentLoaded', () => {
+      redirectIfLoggedIn('dashboard.html');
+
+      // Check query parameter for initial mode
+      const params = new URLSearchParams(window.location.search);
+      const mode = params.get('mode');
+      if (mode === 'signup') {
+        switchAuthTab('signup');
+      } else {
+        switchAuthTab('login');
+      }
+    });
+
+    /**
+     * Switch between Login and Signup tabs
+     */
+    function switchAuthTab(tab) {
+      const tabLogin = document.getElementById('tab-login');
+      const tabSignup = document.getElementById('tab-signup');
+      const formLogin = document.getElementById('form-login');
+      const formSignup = document.getElementById('form-signup');
+
+      if (tab === 'login') {
+        tabLogin.classList.add('active');
+        tabSignup.classList.remove('active');
+        formLogin.style.display = 'block';
+        formSignup.style.display = 'none';
+        document.getElementById('login-email')?.focus();
+      } else {
+        tabSignup.classList.add('active');
+        tabLogin.classList.remove('active');
+        formLogin.style.display = 'none';
+        formSignup.style.display = 'block';
+        document.getElementById('signup-name')?.focus();
+      }
+    }
+
+    /**
+     * Show / Hide password visibility
+     */
+    function togglePasswordVisibility(inputId, toggleBtn) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      if (input.type === 'password') {
+        input.type = 'text';
+        toggleBtn.textContent = '🔒';
+      } else {
+        input.type = 'password';
+        toggleBtn.textContent = '👁️';
+      }
+    }
+
+    /**
+     * Auto fill demo credentials for effortless testing
+     */
+    function fillDemoCredentials() {
+      document.getElementById('login-email').value = 'demo@example.com';
+      document.getElementById('login-password').value = 'Demo@123';
+      showToast('Demo credentials filled!', 'info');
+    }
+
+    /**
+     * Handle Login submission
+     */
+    async function handleLoginSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      const submitBtn = document.getElementById('btn-login-submit');
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Verifying...';
+
+      try {
+        const result = await login(email, password);
+        if (result.success) {
+          showToast(result.message, 'success');
+          const params = new URLSearchParams(window.location.search);
+          const redirect = params.get('redirect') || 'dashboard.html';
+          setTimeout(() => {
+            window.location.href = redirect;
+          }, 450);
+        } else {
+          showToast(result.message, 'error');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Sign In to Dashboard';
+        }
+      } catch (err) {
+        showToast('Login error: ' + err.message, 'error');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Sign In to Dashboard';
+      }
+    }
+
+    /**
+     * Handle Signup submission
+     */
+    async function handleSignupSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('signup-name').value;
+      const email = document.getElementById('signup-email').value;
+      const password = document.getElementById('signup-password').value;
+      const submitBtn = document.getElementById('btn-signup-submit');
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Encrypting & Registering...';
+
+      try {
+        const result = await signup(name, email, password);
+        if (result.success) {
+          showToast(result.message, 'success');
+          // Automatically log the newly registered user in
+          const loginResult = await login(email, password);
+          if (loginResult.success) {
+            setTimeout(() => {
+              window.location.href = 'dashboard.html';
+            }, 600);
+          } else {
+            switchAuthTab('login');
+          }
+        } else {
+          showToast(result.message, 'error');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Register Account';
+        }
+      } catch (err) {
+        showToast('Signup error: ' + err.message, 'error');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Register Account';
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+{
+  "name": "lumina-blog-app",
+  "version": "1.0.0",
+  "description": "Full-Stack Blog Application built purely with Vanilla HTML5, CSS3, and JavaScript, featuring Web Crypto API SHA-256 authentication and LocalStorage persistence.",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve . -p 8080",
+    "dev": "npx serve . -p 3000",
+    "build": "echo 'Static assets ready for deployment'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ApurvPandey0199/lumina-blog-app.git"
+  },
+  "keywords": [
+    "vanilla-javascript",
+    "html5",
+    "css3",
+    "blog-app",
+    "web-crypto-api",
+    "localstorage",
+    "render-deployment"
+  ],
+  "author": "Apurv Pandey (https://github.com/ApurvPandey0199)",
+  "license": "MIT"
+}

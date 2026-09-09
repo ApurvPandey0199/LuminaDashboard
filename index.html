@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lumina Blog | Modern Full-Stack Journal</title>
+  <meta name="description" content="A modern, high-performance blog platform built purely with HTML, CSS, and Vanilla JavaScript with browser-side storage and cryptographic authentication.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Sticky Navigation Bar -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="index.html" class="logo" id="site-logo">
+        <div class="logo-icon">L</div>
+        <div class="logo-text">Lumina<span>Blog</span></div>
+      </a>
+      <div class="nav-actions" id="nav-actions">
+        <!-- Injected dynamically by auth.js -->
+        <a href="auth.html?mode=login" class="btn btn-outline btn-sm">Sign In</a>
+        <a href="auth.html?mode=signup" class="btn btn-primary btn-sm">Create Account</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-tag">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        Pure Vanilla Web Experience
+      </div>
+      <h1 class="hero-title">
+        Insights, Stories &amp; <br>
+        <span class="gradient-text">Modern Web Craftsmanship</span>
+      </h1>
+      <p class="hero-subtitle">
+        Discover thoughtful articles on engineering, architecture, and design. Powered purely by client-side Web Crypto and LocalStorage.
+      </p>
+
+      <div style="margin-bottom: 2rem;" id="hero-cta-container">
+        <!-- If logged in, a write button will be injected or shown -->
+      </div>
+
+      <!-- Search & Sorting Filter Bar -->
+      <div class="filter-bar-card">
+        <div class="search-box">
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input 
+            type="text" 
+            id="search-input" 
+            class="search-input" 
+            placeholder="Search by title, keywords, or author..." 
+            autocomplete="off"
+          >
+        </div>
+
+        <div class="filter-controls">
+          <label for="sort-select" class="filter-label">Sort by:</label>
+          <select id="sort-select" class="custom-select">
+            <option value="newest" selected>Newest First</option>
+            <option value="oldest">Oldest First</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Public Blog Feed -->
+  <main class="container">
+    <div class="feed-header-info">
+      <span id="post-count-label">Loading articles...</span>
+      <div style="display: flex; gap: 0.6rem; align-items: center;">
+        <span class="badge badge-pill">Public Feed</span>
+        <a href="dashboard.html" class="btn btn-primary btn-sm" id="btn-quick-create" style="display: none;">
+          + Write Article
+        </a>
+      </div>
+    </div>
+
+    <div class="posts-grid" id="posts-grid">
+      <!-- Dynamically populated by app.js -->
+    </div>
+  </main>
+
+  <!-- Full Article Reading Modal -->
+  <div class="modal-backdrop" id="post-reader-modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <span class="badge badge-active">Article View</span>
+        <button class="btn-close-modal" id="btn-close-reader" title="Close article">&times;</button>
+      </div>
+      <div class="modal-body">
+        <img id="modal-post-cover" class="modal-post-cover" src="" alt="Post cover" />
+        <div class="modal-post-meta">
+          <span id="modal-post-author" style="font-weight: 600; color: var(--text-main);"></span>
+          <span id="modal-post-date"></span>
+          <span id="modal-post-readtime"></span>
+        </div>
+        <h2 id="modal-post-title" class="modal-post-title"></h2>
+        <div id="modal-post-content" class="modal-post-content"></div>
+      </div>
+      <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
+        <div id="modal-post-actions" style="display: flex; gap: 0.5rem;">
+          <!-- Dynamically populated with Edit and Delete when logged in -->
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="closePostModal()">Close Reader</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal (Also present on index.html for fast deletion) -->
+  <div class="modal-backdrop" id="confirm-delete-modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-dialog confirm-dialog">
+      <div class="confirm-icon">⚠️</div>
+      <h3 class="confirm-title">Delete Article?</h3>
+      <p class="confirm-desc">Are you sure you want to delete this article? This action cannot be undone and will permanently remove it.</p>
+      <div class="confirm-actions">
+        <button class="btn btn-secondary" id="btn-cancel-delete">Cancel</button>
+        <button class="btn btn-danger" id="btn-confirm-delete">Confirm Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <div class="logo">
+        <div class="logo-icon" style="width: 28px; height: 28px; font-size: 0.9rem;">L</div>
+        <div class="logo-text" style="font-size: 1.1rem;">Lumina<span>Blog</span></div>
+      </div>
+      <p>Built with pure Vanilla HTML5, CSS3 &amp; JavaScript. No frameworks, no external libraries.</p>
+      <p style="font-size: 0.8rem; color: var(--text-dim);">&copy; 2026 Lumina Blog Platform. Client-Side Data Secured with Web Crypto API.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="auth.js"></script>
+  <script src="app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      initPublicFeed();
+
+      // Show quick create button if user is logged in
+      const session = getCurrentSession();
+      if (session) {
+        const quickBtn = document.getElementById('btn-quick-create');
+        if (quickBtn) quickBtn.style.display = 'inline-flex';
+
+        const heroCta = document.getElementById('hero-cta-container');
+        if (heroCta) {
+          heroCta.innerHTML = `
+            <a href="dashboard.html" class="btn btn-primary btn-lg">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              Author New Article
+            </a>
+          `;
+        }
+      }
+    });
+  </script>
+</body>
+</html>
